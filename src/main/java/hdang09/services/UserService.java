@@ -19,10 +19,10 @@ public class UserService {
 
     static List<User> users = new ArrayList<>(
             Arrays.asList(
-                    new User(1, "name", "studentID", 1123, 231, 123, 3, "questions", answers, 23),
-                    new User(2, "name", "studentID", 1123, 231, 123, 3, "questions", answers, 23),
-                    new User(3, "name", "studentID", 1123, 231, 123, 3, "questions", answers, 23),
-                    new User(4, "name", "studentID", 1123, 231, 123, 3, "questions", answers, 23)
+                    new User("1", "name", "studentID", 1123, 231, 123, 3, "questions", answers, 23),
+                    new User("2", "name", "studentID", 1123, 231, 123, 3, "questions", answers, 23),
+                    new User("3", "name", "studentID", 1123, 231, 123, 3, "questions", answers, 23),
+                    new User("4", "name", "studentID", 1123, 231, 123, 3, "questions", answers, 23)
             )
     );
 
@@ -30,9 +30,9 @@ public class UserService {
         return users;
     }
 
-    public User getUserResult(int studentId) {
+    public User getUserResult(String studentId) {
         for (User user : users) {
-            if (user.getId() == studentId) {
+            if (user.getId().equals(studentId)) {
                 return user;
             }
         }
@@ -43,11 +43,11 @@ public class UserService {
         users.add(user);
     }
 
-    public String updateUser(User updateduser, int studentId) {
+    public String updateUser(User updateduser, String studentId) {
         String result = "";
         
         for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).getId() == studentId) {
+            if (users.get(i).getId().equals(studentId)) {
                 updateduser.setId(studentId);
                 users.set(i, updateduser);
                 result = "Updated";
@@ -56,11 +56,11 @@ public class UserService {
         return result.isEmpty() ? "Can't find studentId" : result;
     }
     
-    public String deleteUser(int studentId) {
+    public String deleteUser(String studentId) {
         String result = "";
         
         for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).getId() == studentId) {
+            if (users.get(i).getId().equals(studentId)) {
                 users.remove(i);
                 result = "Deleted";
             }
