@@ -6,14 +6,11 @@ package hdang09.entites;
 
 import java.util.List;
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Entity;
+//import org.hibernate.annotations.Entity;
 
-/**
- *
- * @author Admin
- */
 
 @Entity
 @Table(name = "users")
