@@ -9,6 +9,9 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.UniqueConstraint;
 //import org.hibernate.annotations.Entity;
 
 
@@ -17,15 +20,17 @@ import javax.persistence.Entity;
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     private String name;
+    @Column(name = "studentID")
     private String studentID;
     private int score;
     @Column(name = "time_start")   
     private long timeStart;
     @Column(name = "time_end")   
     private long timeEnd;
-    private int time;
+    private long time;
 //    private Question questions;
     private String questions;
     @Column(name = "my_answers")   
@@ -35,8 +40,7 @@ public class User {
     public User() {
     }
 
-    public User(String id, String name, String studentID, int score, long timeStart, long timeEnd, int time, String questions, String myAnswers, int rank) {
-        this.id = id;
+    public User(String name, String studentID, int score, long timeStart, long timeEnd, long time, String questions, String myAnswers, int rank) {
         this.name = name;
         this.studentID = studentID;
         this.score = score;
@@ -96,11 +100,11 @@ public class User {
         this.timeEnd = timeEnd;
     }
 
-    public int getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(int time) {
+    public void setTime(long time) {
         this.time = time;
     }
 

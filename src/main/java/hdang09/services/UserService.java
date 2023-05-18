@@ -11,72 +11,57 @@ import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+//import org.apache.logging.log4j.LogManager;
+//import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author Admin
  */
-
 @Service
 public class UserService {
 
-//    static List<Integer> answers = new ArrayList<>(Arrays.asList(456, 654, 78, 56));
-//
-//    static List<User> users = new ArrayList<>(
-//            Arrays.asList(
-//                    new User("1", "name", "studentID", 1123, 231, 123, 3, "questions", "answers", 23),
-//                    new User("2", "name", "studentID", 1123, 231, 123, 3, "questions", "answers", 23),
-//                    new User("3", "name", "studentID", 1123, 231, 123, 3, "questions", "answers", 23),
-//                    new User("4", "name", "studentID", 1123, 231, 123, 3, "questions", "answers", 23)
-//            )
-//    );
-    
     @Autowired
     private UserRepository repository;
+//    private static final Logger logger = LogManager.getLogger(UserService.class);
+    
 
     public List<User> getAllUser() {
         List<User> users = new ArrayList<>();
-        for (User user: repository.findAll()) {
+        for (User user : repository.findAll()) {
             users.add(user);
         }
         return users;
     }
 
-//    public User getUserResult(int studentId) {
-//        for (User user : users) {
-//            if (user.getId() == studentId) {
-//                return user;
-//            }
-//        }
-//        return null;
-//    }
-//
-//    public void register(User user) {
-//        users.add(user);
-//    }
-//
-//    public String updateUser(User updateduser, int studentId) {
-//        String result = "";
-//        
-//        for (int i = 0; i < users.size(); i++) {
-//            if (users.get(i).getId() == studentId) {
-//                updateduser.setId(studentId);
-//                users.set(i, updateduser);
-//                result = "Updated";
-//            }
-//        }
-//        return result.isEmpty() ? "Can't find studentId" : result;
-//    }
-//    
-//    public String deleteUser(int studentId) {
-//        String result = "";
-//        
-//        for (int i = 0; i < users.size(); i++) {
-//            if (users.get(i).getId() == studentId) {
-//                users.remove(i);
-//                result = "Deleted";
-//            }
-//        }
-//        return result.isEmpty() ? "Can't find studentId" : result;
-//    }
+    public User getUserResult(String studentId) {
+        for (User user : repository.findAll()) {
+            if (user.getStudentID().equals(studentId)) {
+                return user;
+            }
+        }
+//        repository.findById(studentId).get();
+        return null;
+    }
+
+    public void register(User newUser) {
+//        logger.info("StudentID: ", newUser.getStudentID());
+        repository.save(newUser);
+    }
+
+    public void updateUser(User updatedUser) {
+        repository.save(updatedUser);
+    }
+
+    public String deleteUser(String studentId) {
+        String result = "";
+        
+        for (User user : repository.findAll()) {
+            if (user.getStudentID().equals(studentId)) {
+                repository.delete(user);
+                result = "Deleted!!!";
+            }
+        }
+        return result.isEmpty() ? "Can't find student ID" : result;
+    }
 }

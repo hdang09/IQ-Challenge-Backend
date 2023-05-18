@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -23,24 +25,28 @@ public class UserController {
         return service.getAllUser();
     }
     
-//    @GetMapping("{studentId}")
-//    public User getUserResult(@PathVariable int studentId) {
-//        return service.getUserResult(studentId);
-//    }
-//    
-//    @PostMapping("register")
-//    public void register(@RequestBody User user) {
-//        service.register(user);
-//    }
-//    
-//    // Don't require it
-//    @PutMapping("update/{studentId}")
-//    public String updateUser(@RequestBody User user, @PathVariable int studentId) {
-//        return service.updateUser(user, studentId);
-//    }
-//    
-//    @DeleteMapping("delete/{studentId}")
-//    public String deleteUser(@PathVariable int studentId) {
-//        return service.deleteUser(studentId);
-//    }
+    @GetMapping("{studentId}")
+    public User getUserResult(@PathVariable String studentId) {
+        return service.getUserResult(studentId);
+    }
+    
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public void register(@RequestBody User newUser) {
+         service.register(newUser);
+    }
+    
+    // Don't require it
+    @PutMapping("update/{studentId}")
+    public void updateUser(@RequestBody User user, @PathVariable String studentId) {
+        if (studentId != null) {
+            user.setStudentID(studentId);
+        }
+         service.updateUser(user);
+    }
+    
+    @DeleteMapping("delete/{studentId}")
+    public String deleteUser(@PathVariable String studentId) {
+        return service.deleteUser(studentId);
+    }
+    
 }
