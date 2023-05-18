@@ -3,6 +3,7 @@ package hdang09.controllers;
 import hdang09.entites.User;
 import hdang09.services.UserService;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserController {
     
+    @Autowired
     UserService service = new UserService();
 
     @GetMapping("scoreboard")
@@ -21,24 +23,24 @@ public class UserController {
         return service.getAllUser();
     }
     
-    @GetMapping("{studentId}")
-    public User getUserResult(@PathVariable int studentId) {
-        return service.getUserResult(studentId);
-    }
-    
-    @PostMapping("register")
-    public void register(@RequestBody User user) {
-        service.register(user);
-    }
-    
-    // Don't require it
-    @PutMapping("update/{studentId}")
-    public String updateUser(@RequestBody User user, @PathVariable int studentId) {
-        return service.updateUser(user, studentId);
-    }
-    
-    @DeleteMapping("delete/{studentId}")
-    public String deleteUser(@PathVariable int studentId) {
-        return service.deleteUser(studentId);
-    }
+//    @GetMapping("{studentId}")
+//    public User getUserResult(@PathVariable int studentId) {
+//        return service.getUserResult(studentId);
+//    }
+//    
+//    @PostMapping("register")
+//    public void register(@RequestBody User user) {
+//        service.register(user);
+//    }
+//    
+//    // Don't require it
+//    @PutMapping("update/{studentId}")
+//    public String updateUser(@RequestBody User user, @PathVariable int studentId) {
+//        return service.updateUser(user, studentId);
+//    }
+//    
+//    @DeleteMapping("delete/{studentId}")
+//    public String deleteUser(@PathVariable int studentId) {
+//        return service.deleteUser(studentId);
+//    }
 }

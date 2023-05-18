@@ -5,29 +5,40 @@
 package hdang09.entites;
 
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  *
  * @author Admin
  */
+
+@Entity
+@Table(name = "users")
 public class User {
 
-    private int id;
+    @Id
+    private String id;
     private String name;
     private String studentID;
     private int score;
-    private int timeStart;
-    private int timeEnd;
+    @Column(name = "time_start")   
+    private long timeStart;
+    @Column(name = "time_end")   
+    private long timeEnd;
     private int time;
 //    private Question questions;
     private String questions;
-    private List<Integer> myAnswers;
+    @Column(name = "my_answers")   
+    private String myAnswers;
     private int rank;
-
+    
     public User() {
     }
 
-    public User(int id, String name, String studentID, int score, int timeStart, int timeEnd, int time, String questions, List<Integer> myAnswers, int rank) {
+    public User(String id, String name, String studentID, int score, long timeStart, long timeEnd, int time, String questions, String myAnswers, int rank) {
         this.id = id;
         this.name = name;
         this.studentID = studentID;
@@ -40,15 +51,13 @@ public class User {
         this.rank = rank;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
-    
-    
 
     public String getName() {
         return name;
@@ -74,19 +83,19 @@ public class User {
         this.score = score;
     }
 
-    public int getTimeStart() {
+    public long getTimeStart() {
         return timeStart;
     }
 
-    public void setTimeStart(int timeStart) {
+    public void setTimeStart(long timeStart) {
         this.timeStart = timeStart;
     }
 
-    public int getTimeEnd() {
+    public long getTimeEnd() {
         return timeEnd;
     }
 
-    public void setTimeEnd(int timeEnd) {
+    public void setTimeEnd(long timeEnd) {
         this.timeEnd = timeEnd;
     }
 
@@ -98,6 +107,14 @@ public class User {
         this.time = time;
     }
 
+    public String getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(String questions) {
+        this.questions = questions;
+    }
+
 //    public Question getQuestions() {
 //        return questions;
 //    }
@@ -106,14 +123,14 @@ public class User {
 //        this.questions = questions;
 //    }
 
-    public List<Integer> getMyAnswers() {
+    public String getMyAnswers() {
         return myAnswers;
     }
 
-    public void setMyAnswers(List<Integer> myAnswers) {
+    public void setMyAnswers(String myAnswers) {
         this.myAnswers = myAnswers;
     }
-
+    
     public int getRank() {
         return rank;
     }
@@ -121,10 +138,4 @@ public class User {
     public void setRank(int rank) {
         this.rank = rank;
     }
-
-    @Override
-    public String toString() {
-        return "User{" + "name=" + name + ", studentID=" + studentID + ", score=" + score + ", timeStart=" + timeStart + ", timeEnd=" + timeEnd + ", time=" + time + ", questions=" + questions + ", myAnswers=" + myAnswers + ", rank=" + rank + '}';
-    }
-
 }
