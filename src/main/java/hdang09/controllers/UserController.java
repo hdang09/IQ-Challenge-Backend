@@ -1,9 +1,11 @@
 package hdang09.controllers;
 
 import hdang09.entites.User;
+import hdang09.entities.CustomResponse;
 import hdang09.services.UserService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,8 +33,8 @@ public class UserController {
     }
     
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public void register(@RequestBody User newUser) {
-         service.register(newUser);
+    public ResponseEntity<CustomResponse> register(@RequestBody User newUser) {
+         return service.register(newUser);
     }
     
     // Don't require it
