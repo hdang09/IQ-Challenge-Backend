@@ -20,8 +20,8 @@ import javax.persistence.UniqueConstraint;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
     private String name;
     @Column(name = "studentID")
     private String studentID;
@@ -35,6 +35,7 @@ public class User {
     private String questions;
     @Column(name = "my_answers")   
     private String myAnswers;
+    @Column(name = "ranking")   
     private int rank;
     
     public User() {
@@ -52,11 +53,11 @@ public class User {
         this.rank = rank;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
