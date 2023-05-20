@@ -4,12 +4,16 @@
  */
 package hdang09.services;
 
-import hdang09.entites.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import hdang09.entities.User;
 import hdang09.entities.CustomResponse;
+import hdang09.entities.Question;
+import hdang09.repositories.QuestionRepository;
 import hdang09.repositories.UserRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +30,10 @@ public class UserService {
 
     @Autowired
     private UserRepository repository;
+    @Autowired
+    private QuestionRepository repo;
+    private ObjectMapper objectMapper;
+
 //    private static final Logger logger = LogManager.getLogger(UserService.class);
 
     public List<User> getAllUser() {
@@ -66,6 +74,8 @@ public class UserService {
     }
 
     public void updateUser(User updatedUser) {
+//        User user = repository.findById(updatedUser.getId()).get();
+//        List<Integer> questionIds = user.g
         repository.save(updatedUser);
     }
 
@@ -79,5 +89,15 @@ public class UserService {
             }
         }
         return result.isEmpty() ? "Can't find student ID" : result;
+    }
+
+    public List<Integer> startTheQuiz(User user) {
+        User userDb = repository.getUserByStudentId(user.getStudentID());
+        List<Integer> questionIds = Arrays.stream(userDb.getQuestions().split(","))
+                                    .map(Integer::parseInt)
+                                    .collect(Collectors.toCollection(ArrayList::new));
+        List<Question> questions = new ArrayList<>();
+        return questionIds;
+        
     }
 }

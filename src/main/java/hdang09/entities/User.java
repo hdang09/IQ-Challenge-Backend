@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package hdang09.entites;
+package hdang09.entities;
 
 import java.util.List;
 import javax.persistence.Column;
@@ -11,7 +11,8 @@ import javax.persistence.Table;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
 //import org.hibernate.annotations.Entity;
 
 
@@ -20,10 +21,9 @@ import javax.persistence.UniqueConstraint;
 public class User {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    @Column(name = "studentID")
     private String studentID;
     private int score;
     @Column(name = "time_start")   
@@ -31,7 +31,7 @@ public class User {
     @Column(name = "time_end")   
     private long timeEnd;
     private long time;
-//    private Question questions;
+//    @ManyToMany(targetEntity = Question.class)
     private String questions;
     @Column(name = "my_answers")   
     private String myAnswers;
@@ -116,14 +116,6 @@ public class User {
     public void setQuestions(String questions) {
         this.questions = questions;
     }
-
-//    public Question getQuestions() {
-//        return questions;
-//    }
-//
-//    public void setQuestions(Question questions) {
-//        this.questions = questions;
-//    }
 
     public String getMyAnswers() {
         return myAnswers;

@@ -2,25 +2,41 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package hdang09.entites;
+package hdang09.entities;
 
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
  * @author Admin
  */
+
+@Entity
+@Table(name = "questions")
 public class Question {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Transient
     private List<String> question;
+//    @Column(name = "multiple_choice")
+    @Transient
     private List<String> multipleChoice;
     private int answer;
-    private boolean isLong;
+    @Column(name = "is_long")
+    private int isLong;
 
     public Question() {
     }
 
-    public Question(int id, List<String> question, List<String> multipleChoice, int answer, boolean isLong) {
+    public Question(int id, List<String> question, List<String> multipleChoice, int answer, int isLong) {
         this.id = id;
         this.question = question;
         this.multipleChoice = multipleChoice;
@@ -60,11 +76,11 @@ public class Question {
         this.answer = answer;
     }
 
-    public boolean isIsLong() {
+    public int getIsLong() {
         return isLong;
     }
 
-    public void setIsLong(boolean isLong) {
+    public void setIsLong(int isLong) {
         this.isLong = isLong;
     }
 

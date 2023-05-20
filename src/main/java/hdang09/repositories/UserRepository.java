@@ -4,7 +4,7 @@
  */
 package hdang09.repositories;
 
-import hdang09.entites.User;
+import hdang09.entities.User;
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
