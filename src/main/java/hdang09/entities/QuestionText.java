@@ -4,6 +4,8 @@
  */
 package hdang09.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,7 +19,7 @@ import javax.persistence.Table;
  * @author Admin
  */
 @Entity
-@Table(name = "question_texts")
+@Table(name = "questiontexts")
 public class QuestionText {
 
     @Id
@@ -25,17 +27,22 @@ public class QuestionText {
     private int id;
 
     private String text;
-
-    @ManyToOne(targetEntity = Question.class)
-    private int question_id;
+    
+    @Column(name = "question_id")
+    private int questionId;
+    
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "question_id", insertable = false, updatable = false)
+    private Question question;
 
     public QuestionText() {
     }
 
-    public QuestionText(int id, String text, int question_id) {
+    public QuestionText(int id, String text, int questionId) {
         this.id = id;
         this.text = text;
-        this.question_id = question_id;
+        this.questionId = questionId;
     }
 
     public int getId() {
@@ -54,12 +61,12 @@ public class QuestionText {
         this.text = text;
     }
 
-    public int getQuestion_id() {
-        return question_id;
+    public int getQuestionId() {
+        return questionId;
     }
 
-    public void setQuestion_id(int question_id) {
-        this.question_id = question_id;
+    public void setQuestionId(int questionId) {
+        this.questionId = questionId;
     }
-
+    
 }

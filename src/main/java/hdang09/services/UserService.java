@@ -4,7 +4,6 @@
  */
 package hdang09.services;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import hdang09.entities.User;
 import hdang09.entities.CustomResponse;
 import hdang09.entities.Question;
@@ -32,10 +31,8 @@ public class UserService {
     private UserRepository repository;
     @Autowired
     private QuestionRepository repo;
-    private ObjectMapper objectMapper;
 
 //    private static final Logger logger = LogManager.getLogger(UserService.class);
-
     public List<User> getAllUser() {
         return repository.getAllUsers();
     }
@@ -58,12 +55,12 @@ public class UserService {
             response = new CustomResponse(false, "Họ tên không trùng với MSSV đã đăng ký trước đó!");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
-        
+
         if (user.getTimeEnd() != 0) {
             response = new CustomResponse(true, "Đã đăng ký trước đó, đăng nhập thành công!");
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
         }
-        
+
         if (user.getTimeEnd() == 0) {
             response = new CustomResponse(false, "MSSV này đã được sử dụng!");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
@@ -91,13 +88,21 @@ public class UserService {
         return result.isEmpty() ? "Can't find student ID" : result;
     }
 
-    public List<Integer> startTheQuiz(User user) {
+    public List<Question> startTheQuiz(User user) {
         User userDb = repository.getUserByStudentId(user.getStudentID());
         List<Integer> questionIds = Arrays.stream(userDb.getQuestions().split(","))
-                                    .map(Integer::parseInt)
-                                    .collect(Collectors.toCollection(ArrayList::new));
-        List<Question> questions = new ArrayList<>();
-        return questionIds;
+                .map(Integer::parseInt)
+                .collect(Collectors.toCollection(ArrayList::new));
         
+        List<Question> questions = new ArrayList<>();
+        for (Question q: repo.findAll()) {
+            questions.add(q);
+        }
+
+//        List<MultipleChoice> mul = new ArrayList<>();
+//        for (MultipleChoice m : mRepo.findAll()) {
+//            mul.add(m);
+//        }
+        return questions;
     }
 }

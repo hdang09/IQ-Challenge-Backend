@@ -4,10 +4,13 @@
  */
 package hdang09.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -16,6 +19,7 @@ import javax.persistence.Table;
  * @author Admin
  */
 @Entity
+@Table(name = "multiplechoice")
 public class MultipleChoice {
 
     @Id
@@ -24,16 +28,21 @@ public class MultipleChoice {
 
     private String choice;
 
-    @ManyToOne(targetEntity = Question.class)
-    private int question_id;
+    @Column(name = "question_id")
+    private int questionId;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "question_id", insertable = false, updatable = false)
+    private Question question;
 
     public MultipleChoice() {
     }
 
-    public MultipleChoice(int id, String choice, int question_id) {
+    public MultipleChoice(int id, String choice, int questionId) {
         this.id = id;
         this.choice = choice;
-        this.question_id = question_id;
+        this.questionId = questionId;
     }
 
     public int getId() {
@@ -52,12 +61,19 @@ public class MultipleChoice {
         this.choice = choice;
     }
 
-    public int getQuestion_id() {
-        return question_id;
+    public int getQuestionId() {
+        return questionId;
     }
 
-    public void setQuestion_id(int question_id) {
-        this.question_id = question_id;
+    public void setQuestionId(int questionId) {
+        this.questionId = questionId;
     }
 
+//    public Question getQuestion() {
+//        return question;
+//    }
+//
+//    public void setQuestion(Question question) {
+//        this.question = question;
+//    }
 }

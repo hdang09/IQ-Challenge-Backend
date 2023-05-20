@@ -2,6 +2,7 @@ package hdang09.controllers;
 
 import hdang09.entities.User;
 import hdang09.entities.CustomResponse;
+import hdang09.entities.MultipleChoice;
 import hdang09.entities.Question;
 import hdang09.services.UserService;
 import java.util.List;
@@ -53,7 +54,7 @@ public class UserController {
     }
 
     @GetMapping("start")
-    public List<Integer> startTheQuiz(@RequestBody User user) {
+    public List<Question> startTheQuiz(@RequestBody User user) {
         return service.startTheQuiz(user);
     }
 }
