@@ -4,6 +4,7 @@
  */
 package hdang09.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -11,10 +12,6 @@ import javax.persistence.Table;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.ManyToMany;
-import javax.persistence.Transient;
-//import org.hibernate.annotations.Entity;
-
 
 @Entity
 @Table(name = "users")
@@ -26,18 +23,17 @@ public class User {
     private String name;
     private String studentID;
     private int score;
-    @Column(name = "time_start")   
+    @Column(name = "time_start")
     private long timeStart;
-    @Column(name = "time_end")   
+    @Column(name = "time_end")
     private long timeEnd;
     private long time;
-//    @ManyToMany(targetEntity = Question.class)
     private String questions;
-    @Column(name = "my_answers")   
+    @Column(name = "my_answers")
     private String myAnswers;
-    @Column(name = "ranking")   
+    @Column(name = "ranking")
     private int rank;
-    
+
     public User() {
     }
 
@@ -109,27 +105,40 @@ public class User {
         this.time = time;
     }
 
-    public String getQuestions() {
-        return questions;
+    public List<Integer> getQuestions() {
+        List<Integer> questionIds = new ArrayList<>();
+        for (String id : questions.split(",")) {
+            questionIds.add(Integer.valueOf(id));
+        }
+        return questionIds;
     }
 
     public void setQuestions(String questions) {
         this.questions = questions;
     }
 
-    public String getMyAnswers() {
-        return myAnswers;
+    public List<Integer> getMyAnswers() {
+        List<Integer> ans = new ArrayList<>();
+        for (String id : myAnswers.split(",")) {
+            ans.add(Integer.valueOf(id));
+        }
+        return ans;
     }
 
     public void setMyAnswers(String myAnswers) {
         this.myAnswers = myAnswers;
     }
-    
+
     public int getRank() {
         return rank;
     }
 
     public void setRank(int rank) {
         this.rank = rank;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" + "id=" + id + ", name=" + name + ", studentID=" + studentID + ", score=" + score + ", timeStart=" + timeStart + ", timeEnd=" + timeEnd + ", time=" + time + ", questions=" + questions + ", myAnswers=" + myAnswers + ", rank=" + rank + '}';
     }
 }

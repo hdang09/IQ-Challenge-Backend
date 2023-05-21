@@ -6,19 +6,18 @@ package hdang09.services;
 
 import hdang09.entities.User;
 import hdang09.entities.CustomResponse;
+import hdang09.entities.CustomUser;
+import hdang09.entities.Data;
 import hdang09.entities.Question;
 import hdang09.repositories.QuestionRepository;
 import hdang09.repositories.UserRepository;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-//import org.apache.logging.log4j.LogManager;
-//import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -28,25 +27,26 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     @Autowired
-    private UserRepository repository;
+    private UserRepository userRepo;
     @Autowired
-    private QuestionRepository repo;
+    private QuestionRepository qRepo;
 
-//    private static final Logger logger = LogManager.getLogger(UserService.class);
     public List<User> getAllUser() {
-        return repository.getAllUsers();
+        return userRepo.getAllUsers();
     }
 
     public User getUserResult(String studentId) {
-        return repository.getUserByStudentId(studentId);
+        return userRepo.getUserByStudentId(studentId);
     }
 
     public ResponseEntity<CustomResponse> register(User newUser) {
-        User user = repository.getUserByStudentId(newUser.getStudentID());
+        User user = userRepo.getUserByStudentId(newUser.getStudentID());
         CustomResponse response = new CustomResponse();
 
         if (user == null) {
-            repository.save(newUser);
+            newUser.setName(newUser.getName().toUpperCase());
+            newUser.setStudentID(newUser.getStudentID().toUpperCase());
+            userRepo.save(newUser);
             response = new CustomResponse(true, "Đăng ký thành công!");
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
         }
@@ -71,38 +71,100 @@ public class UserService {
     }
 
     public void updateUser(User updatedUser) {
-//        User user = repository.findById(updatedUser.getId()).get();
-//        List<Integer> questionIds = user.g
-        repository.save(updatedUser);
+        userRepo.save(updatedUser);
     }
 
-    public String deleteUser(String studentId) {
-        String result = "";
+    public void deleteUser(String studentId) {
+        User userDb = userRepo.getUserByStudentId(studentId);
+        userRepo.delete(userDb);
+    }
 
-        for (User user : repository.findAll()) {
-            if (user.getStudentID().equals(studentId)) {
-                repository.delete(user);
-                result = "Deleted!!!";
+    public ResponseEntity<CustomResponse> startTheQuiz(String studentID) {
+        User userDb = userRepo.getUserByStudentId(studentID.toUpperCase());
+
+        if (userDb == null) {
+            CustomResponse response = new CustomResponse(false, "Không tìm thấy user!");
+            return ResponseEntity.status(400).body(response);
+        }
+
+        if (userDb.getTimeEnd() != 0) {
+            CustomResponse response = new CustomResponse(false, "Bạn đã nộp bài trước đó!");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        }
+
+        if (userDb.getTimeStart() != 0) {
+            List<Integer> questionIds = userDb.getQuestions();
+            List<Question> questions = new ArrayList<>();
+            for (int id : questionIds) {
+                questions.add(qRepo.findById(id).get());
+            }
+            CustomResponse response = new CustomResponse(true, "Lấy dữ liệu thành công!", new Data(questions, userDb.getTimeStart()));
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+        }
+
+        // Get random 15 questions
+        List<Question> questionsDb = new ArrayList<>();
+        for (Question q : qRepo.findAll()) {
+            questionsDb.add(q);
+        }
+
+        if (questionsDb.size() < 15) {
+            CustomResponse response = new CustomResponse(false, "Số câu hỏi không đủ để bắt đầu bài thi!");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
+        Collections.shuffle(questionsDb);
+        List<Question> randomQuestions = questionsDb.subList(0, 15);
+
+        String questionIds = "";
+        for (Question q : randomQuestions) {
+            questionIds = questionIds + q.getId() + ",";
+        }
+        questionIds = questionIds.substring(0, questionIds.length() - 1);
+
+        userDb.setQuestions(questionIds);
+        userDb.setTimeStart(System.currentTimeMillis());
+        userRepo.save(userDb);
+
+        CustomResponse response = new CustomResponse(true, "Lấy dữ liệu thành công!", new Data(randomQuestions, userDb.getTimeStart()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    public ResponseEntity<CustomResponse> submitTheQuiz(CustomUser user) {
+        User userDb = userRepo.getUserByStudentId(user.getStudentID());
+
+        if (userDb == null) {
+            CustomResponse response = new CustomResponse(false, "Không tìm thấy user!");
+            return ResponseEntity.status(400).body(response);
+        }
+
+        if (userDb.getTimeStart() == 0) {
+            CustomResponse response = new CustomResponse(false, "Bạn chưa bắt đầu làm bài!");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        }
+
+        if (userDb.getTimeEnd() != 0) {
+            CustomResponse response = new CustomResponse(false, "Bạn đã nộp bài trước đó!");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        }
+
+        // Calculate score
+        int score = 0;
+        List<Question> questions = qRepo.getAllQuestions();
+        for (int i = 0; i < user.getAnswer().size(); i++) {
+            if (questions.get(i).getAnswer() == user.getAnswer().get(i)) {
+                score++;
             }
         }
-        return result.isEmpty() ? "Can't find student ID" : result;
-    }
-
-    public List<Question> startTheQuiz(User user) {
-        User userDb = repository.getUserByStudentId(user.getStudentID());
-        List<Integer> questionIds = Arrays.stream(userDb.getQuestions().split(","))
-                .map(Integer::parseInt)
-                .collect(Collectors.toCollection(ArrayList::new));
         
-        List<Question> questions = new ArrayList<>();
-        for (Question q: repo.findAll()) {
-            questions.add(q);
-        }
+        // Store in database
+        userDb.setTimeEnd(System.currentTimeMillis());
+        userDb.setMyAnswers(user.getAnswerString());
+        userDb.setScore(score);
+        userDb.setTime(userDb.getTimeEnd() - userDb.getTimeStart());
+        userRepo.save(userDb);
 
-//        List<MultipleChoice> mul = new ArrayList<>();
-//        for (MultipleChoice m : mRepo.findAll()) {
-//            mul.add(m);
-//        }
-        return questions;
+        CustomResponse response = new CustomResponse(true, "Nộp bài thành công!");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

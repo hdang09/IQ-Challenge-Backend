@@ -38,6 +38,11 @@ public class MultipleChoice {
 
     public MultipleChoice() {
     }
+    
+    public MultipleChoice(String choice, int questionId) {
+        this.choice = choice;
+        this.questionId = questionId;
+    }
 
     public MultipleChoice(int id, String choice, int questionId) {
         this.id = id;
@@ -69,11 +74,4 @@ public class MultipleChoice {
         this.questionId = questionId;
     }
 
-//    public Question getQuestion() {
-//        return question;
-//    }
-//
-//    public void setQuestion(Question question) {
-//        this.question = question;
-//    }
 }

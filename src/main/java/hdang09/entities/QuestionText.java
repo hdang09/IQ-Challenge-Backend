@@ -38,6 +38,11 @@ public class QuestionText {
 
     public QuestionText() {
     }
+    
+    public QuestionText(String text, int questionId) {
+        this.text = text;
+        this.questionId = questionId;
+    }
 
     public QuestionText(int id, String text, int questionId) {
         this.id = id;

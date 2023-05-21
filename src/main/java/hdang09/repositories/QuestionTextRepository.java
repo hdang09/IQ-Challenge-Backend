@@ -4,17 +4,13 @@
  */
 package hdang09.repositories;
 
-import hdang09.entities.Question;
-import java.util.List;
-import org.springframework.data.jpa.repository.Query;
+import hdang09.entities.QuestionText;
 import org.springframework.data.repository.CrudRepository;
 
 /**
  *
  * @author Admin
  */
-public interface QuestionRepository extends CrudRepository<Question, Integer> {
+public interface QuestionTextRepository extends CrudRepository<QuestionText, Integer> {
 
-    @Query("SELECT q FROM Question q")
-    List<Question> getAllQuestions();
 }

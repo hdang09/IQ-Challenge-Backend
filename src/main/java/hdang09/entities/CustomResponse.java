@@ -8,10 +8,11 @@ package hdang09.entities;
  *
  * @author Admin
  */
-
 public class CustomResponse {
+
     private boolean success;
     private String message;
+    private Data data;
 
     public CustomResponse() {
     }
@@ -19,6 +20,12 @@ public class CustomResponse {
     public CustomResponse(boolean success, String message) {
         this.success = success;
         this.message = message;
+    }
+
+    public CustomResponse(boolean success, String message, Data data) {
+        this.success = success;
+        this.message = message;
+        this.data = data;
     }
 
     public boolean isSuccess() {
@@ -36,5 +43,13 @@ public class CustomResponse {
     public void setMessage(String message) {
         this.message = message;
     }
-    
+
+    public Data getData() {
+        return data;
+    }
+
+    public void setData(Data data) {
+        this.data = data;
+    }
+
 }

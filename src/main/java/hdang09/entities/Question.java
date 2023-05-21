@@ -8,15 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
+import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  *
@@ -52,6 +50,11 @@ public class Question {
         this.isLong = isLong;
     }
 
+    public Question(int answer, int isLong) {
+        this.answer = answer;
+        this.isLong = isLong;
+    }
+
     public int getId() {
         return id;
     }
@@ -63,6 +66,13 @@ public class Question {
     public List<String> getQuestion() {
         List<String> questions = new ArrayList<>();
         for (QuestionText qt : question) {
+            if (qt.getText().startsWith("src/assets/images")) {
+                String[] parts = qt.getText().split("/");
+                String lastPart = parts[parts.length - 1];
+                String md5Hash = DigestUtils.md5Hex(lastPart);
+                questions.add("/images/" + md5Hash + ".png");
+                continue;
+            }
             questions.add(qt.getText());
         }
         return questions;
@@ -92,8 +102,8 @@ public class Question {
         this.answer = answer;
     }
 
-    public int getIsLong() {
-        return isLong;
+    public boolean getIsLong() {
+        return isLong == 1;
     }
 
     public void setIsLong(int isLong) {

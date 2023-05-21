@@ -2,8 +2,7 @@ package hdang09.controllers;
 
 import hdang09.entities.User;
 import hdang09.entities.CustomResponse;
-import hdang09.entities.MultipleChoice;
-import hdang09.entities.Question;
+import hdang09.entities.CustomUser;
 import hdang09.services.UserService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("user")
 public class UserController {
 
     @Autowired
@@ -34,9 +33,19 @@ public class UserController {
         return service.getUserResult(studentId);
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @PostMapping("register")
     public ResponseEntity<CustomResponse> register(@RequestBody User newUser) {
         return service.register(newUser);
+    }
+
+    @GetMapping("start/{name}/{studentID}")
+    public ResponseEntity<CustomResponse> startTheQuiz(@PathVariable String name, @PathVariable String studentID) {
+        return service.startTheQuiz(studentID);
+    }
+
+    @PutMapping("end")
+    public ResponseEntity<CustomResponse> submitTheQuiz(@RequestBody CustomUser user) {
+        return service.submitTheQuiz(user);
     }
 
     // Don't require it
@@ -49,12 +58,7 @@ public class UserController {
     }
 
     @DeleteMapping("delete/{studentId}")
-    public String deleteUser(@PathVariable String studentId) {
-        return service.deleteUser(studentId);
-    }
-
-    @GetMapping("start")
-    public List<Question> startTheQuiz(@RequestBody User user) {
-        return service.startTheQuiz(user);
+    public void deleteUser(@PathVariable String studentId) {
+        service.deleteUser(studentId);
     }
 }
