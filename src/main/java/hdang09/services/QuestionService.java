@@ -11,7 +11,6 @@ import hdang09.entities.QuestionText;
 import hdang09.repositories.MultipleChoiceRepository;
 import hdang09.repositories.QuestionRepository;
 import hdang09.repositories.QuestionTextRepository;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
