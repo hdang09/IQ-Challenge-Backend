@@ -15,32 +15,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(maxAge = 3600)
+@CrossOrigin(origins = {"http://localhost:5173", "https://iq.hdang09.site"}, maxAge = 3600)
 @RequestMapping("/question")
 public class QuestionController {
 
     @Autowired
     QuestionService service = new QuestionService();
 
-    @CrossOrigin(origins = "https://iq-api.up.railway.app")
     @GetMapping
     public List<Question> getAllQuestion() {
         return service.getAllQuestion();
     }
 
-    @CrossOrigin(origins = "https://iq-api.up.railway.app")
     @GetMapping("/{questionId}")
     public Question getQuestionById(@PathVariable int questionId) {
         return service.getQuestionById(questionId);
     }
 
-    @CrossOrigin(origins = "https://iq-api.up.railway.app")
     @PostMapping("/create")
     public void createQuestion(@RequestBody List<CustomQuestion> questions) {
         service.createQuestion(questions);
     }
 
-    @CrossOrigin(origins = "https://iq-api.up.railway.app")
     @DeleteMapping("/delete/{questionId}")
     public void deleteQuestion(@PathVariable int questionId) {
         service.deleteQuestion(questionId);

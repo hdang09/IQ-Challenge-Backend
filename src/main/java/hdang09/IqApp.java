@@ -18,15 +18,15 @@ public class IqApp {
         SpringApplication.run(IqApp.class, args);
     }
     
-    @Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/").allowedOrigins("https://iq-api.up.railway.app");
-			}
-		};
-	}
+//    @Bean
+//	public WebMvcConfigurer corsConfigurer() {
+//        return new WebMvcConfigurer() {
+//            @Override
+//            public void addCorsMappings(CorsRegistry registry) {
+//                registry.addMapping("/").allowedOrigins("https://iq-api.up.railway.app");
+//            }
+//        };
+//    }
 
 //    @Bean
 //    public Docket productApi() {
