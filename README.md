@@ -1,5 +1,5 @@
 # IQ Challenge API
-An API for IQ Challenge minigame
+An API for IQ Challenge minigame of F-Code Club for the orientation to welcome K18 of FPT University HCM.
 
 
 ## Project Structure
