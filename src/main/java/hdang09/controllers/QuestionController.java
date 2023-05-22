@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = {"http://localhost:5173", "https://iq.hdang09.site"}, maxAge = 3600)
 @RequestMapping("/question")
 public class QuestionController {
 
