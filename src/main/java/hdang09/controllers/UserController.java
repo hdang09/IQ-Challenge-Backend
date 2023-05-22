@@ -26,38 +26,38 @@ public class UserController {
     UserService service = new UserService();
 
     @CrossOrigin(origins = "https://iq-api.up.railway.app")
-    @GetMapping("scoreboard")
+    @GetMapping("/scoreboard")
     public List<User> getAllUser() {
         return service.getAllUser();
     }
 
     @CrossOrigin(origins = "https://iq-api.up.railway.app")
-    @GetMapping("{studentId}")
+    @GetMapping("/{studentId}")
     public User getUserResult(@PathVariable String studentId) {
         return service.getUserResult(studentId);
     }
 
     @CrossOrigin(origins = "https://iq-api.up.railway.app")
-    @PostMapping("register")
+    @PostMapping("/register")
     public ResponseEntity<CustomResponse> register(@RequestBody User newUser) {
         return service.register(newUser);
     }
 
     @CrossOrigin(origins = "https://iq-api.up.railway.app")
-    @GetMapping("start/{name}/{studentID}")
+    @GetMapping("/start/{name}/{studentID}")
     public ResponseEntity<CustomResponse> startTheQuiz(@PathVariable String name, @PathVariable String studentID) {
         return service.startTheQuiz(studentID);
     }
 
     @CrossOrigin(origins = "https://iq-api.up.railway.app")
-    @PutMapping("end")
+    @PutMapping("/end")
     public ResponseEntity<CustomResponse> submitTheQuiz(@RequestBody CustomUser user) {
         return service.submitTheQuiz(user);
     }
 
     // Don't require it
     @CrossOrigin(origins = "https://iq-api.up.railway.app")
-    @PutMapping("update/{studentId}")
+    @PutMapping("/update/{studentId}")
     public void updateUser(@RequestBody User user, @PathVariable String studentId) {
         if (studentId != null) {
             user.setStudentID(studentId);
@@ -66,7 +66,7 @@ public class UserController {
     }
 
     @CrossOrigin(origins = "https://iq-api.up.railway.app")
-    @DeleteMapping("delete/{studentId}")
+    @DeleteMapping("/delete/{studentId}")
     public void deleteUser(@PathVariable String studentId) {
         service.deleteUser(studentId);
     }

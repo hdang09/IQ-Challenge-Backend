@@ -29,7 +29,7 @@ public class QuestionController {
     }
 
     @CrossOrigin(origins = "https://iq-api.up.railway.app")
-    @GetMapping("{questionId}")
+    @GetMapping("/{questionId}")
     public Question getQuestionById(@PathVariable int questionId) {
         return service.getQuestionById(questionId);
     }
@@ -41,7 +41,7 @@ public class QuestionController {
     }
 
     @CrossOrigin(origins = "https://iq-api.up.railway.app")
-    @DeleteMapping("delete/{questionId}")
+    @DeleteMapping("/delete/{questionId}")
     public void deleteQuestion(@PathVariable int questionId) {
         service.deleteQuestion(questionId);
     }
