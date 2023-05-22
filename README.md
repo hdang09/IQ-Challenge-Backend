@@ -8,7 +8,7 @@ An API for IQ Challenge minigame
 src\main\java\hdang09
                  |--controllers\              # Route controllers (controller layer)
                  |--entities\                 # JPA entities (data layer)
-                 |--repositories\             # class that interact with database
+                 |--repositories\             # Class that interact with database
                  |--services\                 # Business logic (service layer)
                  |--IqApp.java                # App entry point
                  |--ServletInitializer.java   # Config the servlet context
