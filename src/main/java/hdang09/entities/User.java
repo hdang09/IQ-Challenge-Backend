@@ -106,9 +106,11 @@ public class User {
     }
 
     public List<Integer> getQuestions() {
+        if (questions == null) return null;
+        
         List<Integer> questionIds = new ArrayList<>();
         for (String id : questions.split(",")) {
-            questionIds.add(Integer.valueOf(id));
+            questionIds.add(id.equals("null") ? 0 : Integer.valueOf(id));
         }
         return questionIds;
     }
@@ -118,9 +120,11 @@ public class User {
     }
 
     public List<Integer> getMyAnswers() {
+        if (myAnswers == null) return null;
+        
         List<Integer> ans = new ArrayList<>();
         for (String id : myAnswers.split(",")) {
-            ans.add(Integer.valueOf(id));
+            ans.add(id.equals("null") ? 0 : Integer.valueOf(id));
         }
         return ans;
     }

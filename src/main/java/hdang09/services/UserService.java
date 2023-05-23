@@ -41,32 +41,31 @@ public class UserService {
 
     public ResponseEntity<CustomResponse> register(User newUser) {
         User user = userRepo.getUserByStudentId(newUser.getStudentID());
-        CustomResponse response = new CustomResponse();
 
         if (user == null) {
             newUser.setName(newUser.getName().toUpperCase());
             newUser.setStudentID(newUser.getStudentID().toUpperCase());
             userRepo.save(newUser);
-            response = new CustomResponse(true, "Đăng ký thành công!");
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+            CustomResponse response = new CustomResponse(true, "Đăng ký thành công!");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         }
 
         if (!user.getName().equals(newUser.getName())) {
-            response = new CustomResponse(false, "Họ tên không trùng với MSSV đã đăng ký trước đó!");
+            CustomResponse response = new CustomResponse(false, "Họ tên không trùng với MSSV đã đăng ký trước đó!");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
 
         if (user.getTimeEnd() != 0) {
-            response = new CustomResponse(true, "Đã đăng ký trước đó, đăng nhập thành công!");
+            CustomResponse response = new CustomResponse(true, "Đã đăng ký trước đó, đăng nhập thành công!");
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
         }
 
         if (user.getTimeEnd() == 0) {
-            response = new CustomResponse(false, "MSSV này đã được sử dụng!");
+            CustomResponse response = new CustomResponse(false, "MSSV này đã được sử dụng!");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
 
-        response = new CustomResponse(false, "Something went wrong");
+        CustomResponse response = new CustomResponse(false, "Something went wrong");
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
 
@@ -152,6 +151,7 @@ public class UserService {
         int score = 0;
         List<Question> questions = qRepo.getAllQuestions();
         for (int i = 0; i < user.getAnswer().size(); i++) {
+            if (user.getAnswer().get(i) == null) continue;
             if (questions.get(i).getAnswer() == user.getAnswer().get(i)) {
                 score++;
             }
