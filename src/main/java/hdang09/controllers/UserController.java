@@ -27,16 +27,6 @@ public class UserController {
     @Autowired
     UserService service = new UserService();
 
-    @GetMapping("/scoreboard")
-    public CustomResponse getAllUser(@RequestHeader(value = "studentID", required = false) String studentID) {
-        return service.getScoreboard(studentID);
-    }
-
-    @GetMapping("/{studentId}")
-    public ResponseEntity<CustomResponse<User>> getUserResult(@PathVariable String studentId) {
-        return service.getUserResult(studentId);
-    }
-
     @PostMapping("/register")
     public ResponseEntity<CustomResponse<QuestionData>> register(@RequestBody User newUser) {
         return service.register(newUser);
@@ -47,9 +37,19 @@ public class UserController {
         return service.startTheQuiz(studentID);
     }
 
+    @GetMapping("/scoreboard")
+    public CustomResponse getAllUser(@RequestHeader(value = "studentID", required = false) String studentID) {
+        return service.getScoreboard(studentID);
+    }
+
     @PutMapping("/end")
     public ResponseEntity<CustomResponse> submitTheQuiz(@RequestBody CustomUser user) {
         return service.submitTheQuiz(user);
+    }
+
+    @GetMapping("/{studentId}")
+    public ResponseEntity<CustomResponse<User>> getUserResult(@PathVariable String studentId) {
+        return service.getUserResult(studentId);
     }
 
     // Don't require it
