@@ -3,6 +3,7 @@ package hdang09.controllers;
 import hdang09.entities.User;
 import hdang09.entities.CustomResponse;
 import hdang09.entities.CustomUser;
+import hdang09.entities.data.QuestionData;
 import hdang09.services.UserService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:5173", "https://iq.hdang09.site"}, maxAge = 3600)
+@CrossOrigin
 @RequestMapping("user")
 public class UserController {
 
@@ -26,22 +28,22 @@ public class UserController {
     UserService service = new UserService();
 
     @GetMapping("/scoreboard")
-    public List<User> getAllUser() {
-        return service.getAllUser();
+    public CustomResponse getAllUser(@RequestHeader(value = "studentID", required = false) String studentID) {
+        return service.getScoreboard(studentID);
     }
 
     @GetMapping("/{studentId}")
-    public User getUserResult(@PathVariable String studentId) {
+    public ResponseEntity<CustomResponse<User>> getUserResult(@PathVariable String studentId) {
         return service.getUserResult(studentId);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<CustomResponse> register(@RequestBody User newUser) {
+    public ResponseEntity<CustomResponse<QuestionData>> register(@RequestBody User newUser) {
         return service.register(newUser);
     }
 
     @GetMapping("/start/{name}/{studentID}")
-    public ResponseEntity<CustomResponse> startTheQuiz(@PathVariable String name, @PathVariable String studentID) {
+    public ResponseEntity<CustomResponse<QuestionData>> startTheQuiz(@PathVariable String name, @PathVariable String studentID) {
         return service.startTheQuiz(studentID);
     }
 

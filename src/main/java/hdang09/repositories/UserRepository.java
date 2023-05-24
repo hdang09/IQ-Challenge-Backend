@@ -21,4 +21,7 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 
     @Query("SELECT u FROM User u")
     List<User> getAllUsers();
+    
+    @Query("SELECT u FROM User u WHERE name <> '' and timeEnd <> 0 ORDER BY score DESC, time ")
+    List<User> getScoreboard();
 }

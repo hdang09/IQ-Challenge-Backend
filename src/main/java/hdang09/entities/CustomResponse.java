@@ -4,15 +4,18 @@
  */
 package hdang09.entities;
 
+import hdang09.entities.data.QuestionData;
+
 /**
  *
  * @author Admin
+ * @param <T>
  */
-public class CustomResponse {
+public class CustomResponse<T> {
 
     private boolean success;
     private String message;
-    private Data data;
+    private T data;
 
     public CustomResponse() {
     }
@@ -22,7 +25,7 @@ public class CustomResponse {
         this.message = message;
     }
 
-    public CustomResponse(boolean success, String message, Data data) {
+    public CustomResponse(boolean success, String message, T data) {
         this.success = success;
         this.message = message;
         this.data = data;
@@ -44,11 +47,11 @@ public class CustomResponse {
         this.message = message;
     }
 
-    public Data getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(Data data) {
+    public void setData(T data) {
         this.data = data;
     }
 

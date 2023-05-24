@@ -2,23 +2,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package hdang09.entities;
+package hdang09.entities.data;
 
+import hdang09.entities.Question;
 import java.util.List;
 
 /**
  *
  * @author Admin
  */
-public class Data {
+public class QuestionData {
 
     private List<Question> questions;
     private long timeStart;
 
-    public Data() {
+    public QuestionData() {
     }
 
-    public Data(List<Question> questions, long timeStart) {
+    public QuestionData(List<Question> questions, long timeStart) {
         this.questions = questions;
         this.timeStart = timeStart;
     }

@@ -4,6 +4,7 @@
  */
 package hdang09.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
 import jakarta.persistence.Column;
@@ -12,6 +13,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "users")
@@ -23,15 +25,19 @@ public class User {
     private String name;
     private String studentID;
     private int score;
+    @JsonIgnore 
     @Column(name = "time_start")
     private long timeStart;
+    @JsonIgnore 
     @Column(name = "time_end")
     private long timeEnd;
     private long time;
+    @JsonIgnore
     private String questions;
+    @JsonIgnore
     @Column(name = "my_answers")
     private String myAnswers;
-    @Column(name = "ranking")
+    @Transient
     private int rank;
 
     public User() {

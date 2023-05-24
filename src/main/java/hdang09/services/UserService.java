@@ -7,8 +7,9 @@ package hdang09.services;
 import hdang09.entities.User;
 import hdang09.entities.CustomResponse;
 import hdang09.entities.CustomUser;
-import hdang09.entities.Data;
+import hdang09.entities.data.QuestionData;
 import hdang09.entities.Question;
+import hdang09.entities.data.ScoreboardData;
 import hdang09.repositories.QuestionRepository;
 import hdang09.repositories.UserRepository;
 import java.util.ArrayList;
@@ -35,32 +36,70 @@ public class UserService {
         return userRepo.getAllUsers();
     }
 
-    public User getUserResult(String studentId) {
-        return userRepo.getUserByStudentId(studentId);
+    // TODO: Optimize this
+    public CustomResponse<ScoreboardData> getScoreboard(String studentID) {
+        int rank = 0, studentRank = 0;
+        for (User user : userRepo.getScoreboard()) {
+            user.setRank(++rank);
+
+            if (studentID == null) {
+                continue;
+            }
+            if (user.getStudentID().equals(studentID)) {
+                studentRank = rank;
+            }
+        }
+
+        ScoreboardData data = new ScoreboardData(studentID == null ? 0 : studentRank, userRepo.getScoreboard());
+        return new CustomResponse(true, "Get scoreboard successfully!", data);
     }
 
-    public ResponseEntity<CustomResponse> register(User newUser) {
-        User user = userRepo.getUserByStudentId(newUser.getStudentID());
+    public ResponseEntity<CustomResponse<User>> getUserResult(String studentId) {
+        User userDb = userRepo.getUserByStudentId(studentId);
 
-        if (user == null) {
-            newUser.setName(newUser.getName().toUpperCase());
+        if (userDb == null) {
+            CustomResponse response = new CustomResponse(false, "User không tồn tại");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
+        if (userDb.getTimeStart() == 0) {
+            CustomResponse response = new CustomResponse(false, "Bạn chưa làm bài!");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        }
+
+        if (userDb.getTimeEnd() == 0) {
+            CustomResponse response = new CustomResponse(false, "Bạn chưa nộp bài!");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        }
+
+        CustomResponse response = new CustomResponse(true, "Lấy dữ liệu thành công!", userDb);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    public ResponseEntity<CustomResponse<QuestionData>> register(User newUser) {
+        String name = newUser.getName().toUpperCase();
+        User userDb = userRepo.getUserByStudentId(newUser.getStudentID());
+
+        if (userDb == null) {
+            newUser.setName(name);
             newUser.setStudentID(newUser.getStudentID().toUpperCase());
             userRepo.save(newUser);
             CustomResponse response = new CustomResponse(true, "Đăng ký thành công!");
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
 
-        if (!user.getName().equals(newUser.getName())) {
+        String userDbName = userDb.getName().toUpperCase();
+        if (!userDbName.equals(name)) {
             CustomResponse response = new CustomResponse(false, "Họ tên không trùng với MSSV đã đăng ký trước đó!");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
 
-        if (user.getTimeEnd() != 0) {
+        if (userDb.getTimeEnd() == 0) {
             CustomResponse response = new CustomResponse(true, "Đã đăng ký trước đó, đăng nhập thành công!");
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         }
 
-        if (user.getTimeEnd() == 0) {
+        if (userDb.getTimeEnd() != 0) {
             CustomResponse response = new CustomResponse(false, "MSSV này đã được sử dụng!");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
@@ -78,12 +117,12 @@ public class UserService {
         userRepo.delete(userDb);
     }
 
-    public ResponseEntity<CustomResponse> startTheQuiz(String studentID) {
+    public ResponseEntity<CustomResponse<QuestionData>> startTheQuiz(String studentID) {
         User userDb = userRepo.getUserByStudentId(studentID.toUpperCase());
 
         if (userDb == null) {
             CustomResponse response = new CustomResponse(false, "Không tìm thấy user!");
-            return ResponseEntity.status(400).body(response);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
         if (userDb.getTimeEnd() != 0) {
@@ -92,15 +131,17 @@ public class UserService {
         }
 
         if (userDb.getTimeStart() != 0) {
+            System.out.println("1");
             List<Integer> questionIds = userDb.getQuestions();
             List<Question> questions = new ArrayList<>();
             for (int id : questionIds) {
                 questions.add(qRepo.findById(id).get());
             }
-            CustomResponse response = new CustomResponse(true, "Lấy dữ liệu thành công!", new Data(questions, userDb.getTimeStart()));
+            CustomResponse response = new CustomResponse(true, "Lấy dữ liệu thành công!", new QuestionData(questions, userDb.getTimeStart()));
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
         }
 
+        System.out.println("2");
         // Get random 15 questions
         List<Question> questionsDb = new ArrayList<>();
         for (Question q : qRepo.findAll()) {
@@ -125,7 +166,7 @@ public class UserService {
         userDb.setTimeStart(System.currentTimeMillis());
         userRepo.save(userDb);
 
-        CustomResponse response = new CustomResponse(true, "Lấy dữ liệu thành công!", new Data(randomQuestions, userDb.getTimeStart()));
+        CustomResponse response = new CustomResponse(true, "Lấy dữ liệu thành công!", new QuestionData(randomQuestions, userDb.getTimeStart()));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -134,7 +175,7 @@ public class UserService {
 
         if (userDb == null) {
             CustomResponse response = new CustomResponse(false, "Không tìm thấy user!");
-            return ResponseEntity.status(400).body(response);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
         if (userDb.getTimeStart() == 0) {
@@ -151,12 +192,14 @@ public class UserService {
         int score = 0;
         List<Question> questions = qRepo.getAllQuestions();
         for (int i = 0; i < user.getAnswer().size(); i++) {
-            if (user.getAnswer().get(i) == null) continue;
+            if (user.getAnswer().get(i) == null) {
+                continue;
+            }
             if (questions.get(i).getAnswer() == user.getAnswer().get(i)) {
                 score++;
             }
         }
-        
+
         // Store in database
         userDb.setTimeEnd(System.currentTimeMillis());
         userDb.setMyAnswers(user.getAnswerString());
