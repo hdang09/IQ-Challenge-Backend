@@ -140,23 +140,22 @@ public class UserService {
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
         }
 
-        // long start = System.currentTimeMillis();
-        // Get random 15 questions
-        List<Question> questionsDb = new ArrayList<>();
-        for (Question q : qRepo.findAll()) {
-            questionsDb.add(q);
-        }
-        // long end = System.currentTimeMillis();
-        // System.out.println(end - start);
-
-        if (questionsDb.size() < 15) {
+        // Get all question ids
+        List<Integer> questionIdsDb = qRepo.getAllQuestionId();
+        if (questionIdsDb.size() < 15) {
             CustomResponse response = new CustomResponse(false, "Số câu hỏi không đủ để bắt đầu bài thi!");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
-        Collections.shuffle(questionsDb);
-        List<Question> randomQuestions = questionsDb.subList(0, 15);
+        // Get random 15 questions
+        Collections.shuffle(questionIdsDb);
+        questionIdsDb = questionIdsDb.subList(0, 15);
+        List<Question> randomQuestions = new ArrayList<>();
+        for (Integer id : questionIdsDb) {
+            randomQuestions.add(qRepo.getQuestionById(id));
+        }
 
+        // Get 15 question ids
         String questionIds = "";
         for (Question q : randomQuestions) {
             questionIds = questionIds + q.getId() + ",";
@@ -172,7 +171,7 @@ public class UserService {
     }
 
     public ResponseEntity<CustomResponse> submitTheQuiz(CustomUser user) {
-        User userDb = userRepo.getUserByStudentId(user.getStudentID());
+        User userDb = userRepo.getUserByStudentId(user.getStudentID().toUpperCase());
 
         if (userDb == null) {
             CustomResponse response = new CustomResponse(false, "Không tìm thấy user!");
@@ -191,12 +190,15 @@ public class UserService {
 
         // Calculate score
         int score = 0;
-        List<Question> questions = qRepo.getAllQuestions();
+        List<Integer> questionIds = userDb.getQuestions();
         for (int i = 0; i < user.getAnswer().size(); i++) {
+            int ans = qRepo.getAnswerById(questionIds.get(i));
+
             if (user.getAnswer().get(i) == null) {
                 continue;
             }
-            if (questions.get(i).getAnswer() == user.getAnswer().get(i)) {
+            
+            if (ans == user.getAnswer().get(i)) {
                 score++;
             }
         }

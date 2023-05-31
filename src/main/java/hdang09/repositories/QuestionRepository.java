@@ -8,6 +8,7 @@ import hdang09.entities.Question;
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 /**
  *
@@ -20,4 +21,10 @@ public interface QuestionRepository extends CrudRepository<Question, Integer> {
     
     @Query("SELECT q.id FROM Question q")
     List<Integer> getAllQuestionId();
+    
+    @Query("SELECT q FROM Question q WHERE q.id = :questionId")
+    Question getQuestionById(@Param("questionId") int questionId);
+    
+    @Query("SELECT q.answer FROM Question q WHERE q.id = :questionId")
+    int getAnswerById(@Param("questionId") int questionId);
 }

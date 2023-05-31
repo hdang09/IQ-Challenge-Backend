@@ -11,10 +11,10 @@ git clone https://github.com/hdang09/IQ-Challenge-Backend.git
 cd IQ-Challenge-Backend
 ```
 
-Install the dependencies:
+Run the application:
 
 ```
-mvn install
+java -jar target/iq-0.0.1.jar
 ```
 
 ## Features
