@@ -131,7 +131,6 @@ public class UserService {
         }
 
         if (userDb.getTimeStart() != 0) {
-            System.out.println("1");
             List<Integer> questionIds = userDb.getQuestions();
             List<Question> questions = new ArrayList<>();
             for (int id : questionIds) {
@@ -141,12 +140,14 @@ public class UserService {
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
         }
 
-        System.out.println("2");
+        // long start = System.currentTimeMillis();
         // Get random 15 questions
         List<Question> questionsDb = new ArrayList<>();
         for (Question q : qRepo.findAll()) {
             questionsDb.add(q);
         }
+        // long end = System.currentTimeMillis();
+        // System.out.println(end - start);
 
         if (questionsDb.size() < 15) {
             CustomResponse response = new CustomResponse(false, "Số câu hỏi không đủ để bắt đầu bài thi!");

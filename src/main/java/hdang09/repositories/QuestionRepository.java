@@ -17,4 +17,7 @@ public interface QuestionRepository extends CrudRepository<Question, Integer> {
 
     @Query("SELECT q FROM Question q")
     List<Question> getAllQuestions();
+    
+    @Query("SELECT q.id FROM Question q")
+    List<Integer> getAllQuestionId();
 }
