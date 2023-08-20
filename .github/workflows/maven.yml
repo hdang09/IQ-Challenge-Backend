@@ -62,4 +62,4 @@ jobs:
       - name: Pull latest image
         run: sudo docker pull hdang09/iq-be
       - name: Start Docker image
-        run: sudo docker run --name iq-be -d -p 8080:8080 hdang09/iq-be
+        run: sudo docker run --name iq-be -d -p 8082:8080 hdang09/iq-be
