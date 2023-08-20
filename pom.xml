@@ -70,5 +70,6 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>iq</finalName>
     </build>
 </project>
