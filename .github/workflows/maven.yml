@@ -57,9 +57,9 @@ jobs:
     steps:
       - name: Stop and Remove current container
         run: |
-          sudo docker stop shorten-url-latest || true
-          sudo docker rm shorten-url-latest || true
+          sudo docker stop iq-be || true
+          sudo docker rm iq-be || true
       - name: Pull latest image
         run: sudo docker pull hdang09/iq-be
       - name: Start Docker image
-        run: sudo docker run --name shorten-url-latest -d -p 8080:8080 hdang09/shorten-url
+        run: sudo docker run --name iq-be -d -p 8080:8080 hdang09/iq-be
